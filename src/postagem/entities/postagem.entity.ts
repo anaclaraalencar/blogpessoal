@@ -1,16 +1,22 @@
+import { Transform, TransformFnParams } from "class-transformer";
 import { IsNotEmpty } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Tema } from "../../tema/entities/tema.entity";
 
-@Entity({name:"tb_postagens"})
+@Entity({name: "tb_postagens"})
 export class Postagem{
 
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn() // Chave Primária e Auto_Increment
     id: number;
 
-   @IsNotEmpty()
-   @Column({length: 100, nullable: false})
+    // Validação para espaços em branco
+    @Transform(({ value }: TransformFnParams) => value?.trim()) 
+    @IsNotEmpty()
+    @Column({length: 100, nullable: false})
     titulo: string;
 
+    // Validação para espaços em branco
+    @Transform(({ value }: TransformFnParams) => value?.trim())
     @IsNotEmpty()
     @Column({length: 1000, nullable: false})
     texto: string;
@@ -18,4 +24,8 @@ export class Postagem{
     @UpdateDateColumn()
     data: Date;
 
+    @ManyToOne(() => Tema, (tema) => tema.postagem, {
+        onDelete: "CASCADE"
+    })
+    tema: Tema; // Chave Estrangeira
 }
