@@ -1,4 +1,4 @@
-import { TemaService } from './../../tema/services/tema.service';
+import { TemaService } from '../../tema/services/tema.service';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Postagem } from "../entities/postagem.entity";
@@ -19,7 +19,7 @@ export class PostagemService{
             }
         });
 
-        // SELECT * FROM tb_postagens;
+        
     }
 
     async findById(id: number): Promise<Postagem> {
@@ -33,14 +33,14 @@ export class PostagemService{
             }
         });
 
-        // Checar se a postagem não foi encontrada
+        
         if (!postagem)
             throw new HttpException('Postagem não encontrada!', HttpStatus.NOT_FOUND);
 
-        // Retornar a postagem, caso ela exista
+       
         return postagem;
 
-        // SELECT * FROM tb_postagens WHERE id = ?;
+       
     }
 
     async findByTitulo(titulo: string): Promise<Postagem[]>{
@@ -53,12 +53,12 @@ export class PostagemService{
             }
         })
 
-        // SELECT * FROM tb_postagens WHERE titulo LIKE '%titulo%';
+       
     }
 
     async create(postagem: Postagem): Promise<Postagem>{
 
-        // Caso o tema tenha sido preenchido
+       
         if (postagem.tema){
 
             let tema = await this.temaService.findById(postagem.tema.id)
@@ -69,21 +69,21 @@ export class PostagemService{
             return await this.postagemRepository.save(postagem);
         }
 
-        // Caso o tema não tenha sido preenchido
+        
         return await this.postagemRepository.save(postagem);
 
-         // INSERT INTO tb_postagens (titulo, texto, data) VALUES (?, ?, server);
+         
     }
 
     async update(postagem: Postagem): Promise<Postagem>{
         
         let buscaPostagem: Postagem = await this.findById(postagem.id);
         
-        // Verifica se a postagem existe
+        
         if (!buscaPostagem || !postagem.id)
             throw new HttpException('Postagem não foi encontrada!', HttpStatus.NOT_FOUND)
 
-         // Caso o tema tenha sido preenchido
+         
         if (postagem.tema){
 
             let tema = await this.temaService.findById(postagem.tema.id)
@@ -96,7 +96,7 @@ export class PostagemService{
 
         return await this.postagemRepository.save(postagem);
 
-         // UPDATE tb_postagens SET titulo = ?, texto = ?, data = server WHERE id = ?;
+         
 
     }
 
